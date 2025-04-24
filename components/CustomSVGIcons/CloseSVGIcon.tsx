@@ -1,13 +1,17 @@
 function CloseSVGIcon({ className }: { className?: string }) {
   return (
     <svg
-      className={className}
-      xmlns='http://www.w3.org/2000/svg'
+      width='100%'
+      height='100%'
       viewBox='0 0 24 24'
-      id='close'>
-      <g>
-        <path d='m13.41 12 4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z'></path>
-      </g>
+      className={className}
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M18 6L6 18M6 6L18 18'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
     </svg>
   );
 }
