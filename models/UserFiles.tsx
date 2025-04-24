@@ -56,6 +56,7 @@ export interface UserFolderContentsResponse {
 }
 
 export interface UserFileDetails {
+  file_id: string;
   file_name: string;
   file_type: string;
   file_size: number;

@@ -27,7 +27,7 @@ export class ApiController {
     };
 
     const headers = {
-      Authorisation: await getUserToken(),
+      Authorization: await getUserToken(),
     };
 
     try {
@@ -42,6 +42,18 @@ export class ApiController {
         response.data = requestResponse?.data?.data;
       } else if (requestType === REQUEST_TYPES.POST) {
         const requestResponse: APIResponse = await axios.post(
+          requestURL,
+          requestPayload,
+          {
+            headers: headers,
+          },
+        );
+
+        response.status = requestResponse?.data?.status as API_RESPONSE_STATUS;
+        response.statusCode = requestResponse?.data?.status_code;
+        response.data = requestResponse?.data?.data;
+      } else if (requestType === REQUEST_TYPES.PUT) {
+        const requestResponse: APIResponse = await axios.put(
           requestURL,
           requestPayload,
           {
@@ -89,10 +101,18 @@ export class ApiController {
     return response;
   }
 
-  static async uploadUserFiles(userId: string, files: File[]) {
+  static async uploadUserFiles(
+    file_modified_at: number,
+    folder_id: string,
+    file: File,
+  ) {
     const userFilesFormData = new FormData();
-    userFilesFormData.append('user_id', userId);
-    userFilesFormData.append('user_files', files[0]);
+    userFilesFormData.append(
+      'file_modified_at',
+      file_modified_at?.toString?.(),
+    );
+    userFilesFormData.append('folder_id', folder_id);
+    userFilesFormData.append('user_file', file);
 
     const response = await this.makeRequest({
       requestType: REQUEST_TYPES.POST,
@@ -180,6 +200,27 @@ export class ApiController {
       requestType: REQUEST_TYPES.GET,
       requestURL: ApiConfigs.getFileDetails,
       requestParams: requestParams,
+    });
+
+    return response;
+  }
+
+  static async updateFile(
+    fileId: string,
+    fileModifiedAt: number,
+    folderId: string,
+    file: File,
+  ) {
+    const updateFileFormData = new FormData();
+    updateFileFormData.append('file_id', fileId);
+    updateFileFormData.append('file_modified_at', fileModifiedAt?.toString?.());
+    updateFileFormData.append('folder_id', folderId);
+    updateFileFormData.append('user_file', file);
+
+    const response = await this.makeRequest({
+      requestType: REQUEST_TYPES.PUT,
+      requestURL: ApiConfigs.updateFile,
+      requestPayload: updateFileFormData,
     });
 
     return response;

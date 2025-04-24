@@ -3,6 +3,7 @@ import ListViewSVGIcon from '@/components/CustomSVGIcons/ListViewSVGIcon';
 import GridViewSVGIcon from '@/components/CustomSVGIcons/GridViewSVGIcon';
 import { FILE_VIEWER_VIEW_TYPES } from '@/utils/constants';
 import {
+  UserFileDetails,
   UserFolderContentMetadata,
   UserFolderContentsResponse,
 } from '@/models/UserFiles';
@@ -166,6 +167,70 @@ function FileViewer({
     });
   }
 
+  async function updateFile(
+    content: UserFolderContentMetadata,
+    updatedFile: File,
+  ) {
+    const apiResponse = await ApiController.updateFile(
+      content?.content_id,
+      updatedFile.lastModified,
+      folderId,
+      updatedFile,
+    );
+
+    handleAPIResponse({
+      apiResponse: apiResponse,
+      handleSuccess: () => {
+        const response: UserFileDetails = apiResponse?.data
+          ?.file as UserFileDetails;
+
+        if (response instanceof Object) {
+          setFolderContentsMapping(val => {
+            const updateFolderContents = {
+              ...val,
+            };
+
+            const updatedCurrentFolderData: UserFolderContentsResponse =
+              val?.[folderId];
+
+            if (updatedCurrentFolderData instanceof Object) {
+              const contentIndex =
+                updatedCurrentFolderData?.folder_content?.findIndex?.(
+                  item => item?.content_id === content?.content_id,
+                );
+
+              if (contentIndex !== -1) {
+                let sizeDifference =
+                  response?.file_size -
+                  updatedCurrentFolderData.folder_content[contentIndex]
+                    .content_size;
+                updatedCurrentFolderData.folder_content[
+                  contentIndex
+                ].content_name = response?.file_name;
+                updatedCurrentFolderData.folder_content[
+                  contentIndex
+                ].content_size = response?.file_size;
+                updatedCurrentFolderData.folder_content[
+                  contentIndex
+                ].content_last_modified = response?.file_last_modified;
+                updatedCurrentFolderData.folder_content[
+                  contentIndex
+                ].content_file_type = response?.file_type;
+                updatedCurrentFolderData.folder_content[
+                  contentIndex
+                ].content_thumbnail_url = response?.file_thumbnail_url;
+
+                updatedCurrentFolderData.folder_size += sizeDifference;
+              }
+            }
+
+            return updateFolderContents;
+          });
+        }
+      },
+    });
+  }
+
   useEffect(() => {
     debounceFunction({
       timeout: timerRef,
@@ -260,6 +325,7 @@ function FileViewer({
                   index={index}
                   handleFileSelectClick={handleFileSelectClick}
                   handleDeleteContent={handleDeleteClick}
+                  updateFile={updateFile}
                 />
               ) : (
                 <GridViewItem
@@ -268,6 +334,7 @@ function FileViewer({
                   index={index}
                   handleFileSelectClick={handleFileSelectClick}
                   handleDeleteContent={handleDeleteClick}
+                  updateFile={updateFile}
                 />
               ),
             )}
