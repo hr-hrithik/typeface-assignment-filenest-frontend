@@ -38,7 +38,8 @@ function FileViewer({
 }: Props) {
   const timerRef = useRef<any>(0);
 
-  const { userLogin, setFolderContentsMapping } = useConfigurationContext();
+  const { userLogin, setFolderContentsMapping, setFileDetailsMapping } =
+    useConfigurationContext();
   const [selectedContent, setSelectedContent] =
     useState<UserFolderContentMetadata | null>(null);
   const [currentView, setCurrentView] = useState<string>(
@@ -181,6 +182,14 @@ function FileViewer({
     handleAPIResponse({
       apiResponse: apiResponse,
       handleSuccess: () => {
+        setFileDetailsMapping(val => {
+          const updatedFileDetailsMapping = { ...val };
+          if (Object.hasOwn(updatedFileDetailsMapping, content?.content_id)) {
+            delete updatedFileDetailsMapping?.[content?.content_id];
+          }
+
+          return updatedFileDetailsMapping;
+        });
         const response: UserFileDetails = apiResponse?.data
           ?.file as UserFileDetails;
 
