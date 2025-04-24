@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-background: #272727;
+  --color-backgroundGray: #696773;
+  --color-lightGray: #e6e6ea;
+  --color-primary: #fed766;
+}
+
+body {
+  background-color: var(--color-background);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+}
