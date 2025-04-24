@@ -1,10 +1,11 @@
+import { projectIcons } from '@/assets/icons';
 import Button from '@/components/Button';
 import CompanyLogo from '@/components/CompanyLogo';
-import GoogleSVGIcon from '@/components/CustomSVGIcons/GoogleSVGIcon';
 import { useConfigurationContext } from '@/context/ConfigurationContextProvider';
 import { FirebaseAuth } from '@/utils/Firebase';
 import { PATHS } from '@/utils/Paths';
 import { UI_STRINGS_CONSTANTS } from '@/utils/UIStringConstants';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
@@ -51,7 +52,7 @@ function Login({}: Props) {
               <div className={`flex gap-[12px] items-center justify-center`}>
                 <div
                   className={`w-[18px] h-[18px] flex justify-centere items-center relative`}>
-                  <GoogleSVGIcon />
+                  <Image alt='icon' src={projectIcons.google} />
                 </div>
                 <p
                   className={`text-[14px] font-medium flex justify-center items-center`}>
