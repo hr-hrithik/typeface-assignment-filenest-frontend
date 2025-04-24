@@ -49,6 +49,8 @@ export const FirebaseAuth = {
                 user_profile_image: user?.user?.photoURL || undefined,
               };
 
+              console.log('LOGIN PAYLOAD :: ', userLoginPayload);
+
               const apiResponse = await ApiController.login(userLoginPayload);
               handleAPIResponse({
                 apiResponse: apiResponse,
@@ -62,16 +64,22 @@ export const FirebaseAuth = {
                       LOGIN_KEYS.token,
                       token,
                     );
-                    resolve(true);
                   } else {
-                    resolve(false);
+                    toast.error(TOAST_MESSAGES.invalidToken);
+                    FirebaseAuth.performSignOut();
                   }
+                },
+
+                handleError: () => {
+                  toast.error(TOAST_MESSAGES.failedToLogin);
+                  FirebaseAuth.performSignOut();
                 },
               });
 
               resolve(true);
             } else {
               resolve(false);
+              FirebaseAuth.performSignOut();
             }
           })
           .catch(error => {
