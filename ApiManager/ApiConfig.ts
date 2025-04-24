@@ -1,4 +1,5 @@
-export const BackendBaseURL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+export const BackendBaseURL =
+  'https://typeface-assignment-filenest-backend-23103496258.asia-south1.run.app';
 
 export const ApiConfigs = {
   login: `${BackendBaseURL}/api/v1/login`,
