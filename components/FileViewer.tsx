@@ -321,72 +321,63 @@ function FileViewer({
         </div>
       </div>
 
-      {!!filteredFolderContents?.length ? (
-        <div className={`flex-1 overflow-y-scroll transition-all duration-700`}>
-          {(!!searchString ||
-            selectedFilters?.length !==
-              Object.keys(FILES_FILTER_KEYS)?.length) && (
-            <div className={`mb-[8px]`}>
-              <div>
-                <p className={`text-[18px] font-bold text-white`}>
-                  {`Filtered results (${filteredFolderContents?.length ?? 0})`}
-                </p>
-              </div>
+      <div className={`flex-1 flex flex-col overflow-hidden`}>
+        {(!!searchString ||
+          selectedFilters?.length !==
+            Object.keys(FILES_FILTER_KEYS)?.length) && (
+          <div className={`mb-[8px]`}>
+            <div>
+              <p className={`text-[18px] font-bold text-white`}>
+                {`Filtered results (${filteredFolderContents?.length ?? 0})`}
+              </p>
             </div>
-          )}
+          </div>
+        )}
 
+        {!!filteredFolderContents?.length ? (
           <div
-            className={`h-fit ${
-              currentView === FILE_VIEWER_VIEW_TYPES.LIST_VIEW
-                ? 'flex flex-col gap-[12px]'
-                : 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-[12px] '
-            } `}>
-            {filteredFolderContents?.map?.((content, index) =>
-              currentView === FILE_VIEWER_VIEW_TYPES.LIST_VIEW ? (
-                <ListViewItem
-                  key={content.content_id}
-                  content={content}
-                  index={index}
-                  handleFileSelectClick={handleFileSelectClick}
-                  handleDeleteContent={handleDeleteClick}
-                  updateFile={updateFile}
-                />
-              ) : (
-                <GridViewItem
-                  key={content.content_id}
-                  content={content}
-                  index={index}
-                  handleFileSelectClick={handleFileSelectClick}
-                  handleDeleteContent={handleDeleteClick}
-                  updateFile={updateFile}
-                />
-              ),
-            )}
-          </div>
-        </div>
-      ) : !!folderContents?.folder_content?.length ? (
-        <div className={`flex-1 flex flex-col`}>
-          {(!!searchString ||
-            selectedFilters?.length !==
-              Object.keys(FILES_FILTER_KEYS)?.length) && (
-            <div className={`mb-[8px]`}>
-              <div>
-                <p className={`text-[18px] font-bold text-white`}>
-                  {`Filtered results (${filteredFolderContents?.length ?? 0})`}
-                </p>
-              </div>
+            className={`flex-1 overflow-y-scroll transition-all duration-700`}>
+            <div
+              className={`h-fit ${
+                currentView === FILE_VIEWER_VIEW_TYPES.LIST_VIEW
+                  ? 'flex flex-col gap-[12px]'
+                  : 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-[12px] '
+              } `}>
+              {filteredFolderContents?.map?.((content, index) =>
+                currentView === FILE_VIEWER_VIEW_TYPES.LIST_VIEW ? (
+                  <ListViewItem
+                    key={content.content_id}
+                    content={content}
+                    index={index}
+                    handleFileSelectClick={handleFileSelectClick}
+                    handleDeleteContent={handleDeleteClick}
+                    updateFile={updateFile}
+                  />
+                ) : (
+                  <GridViewItem
+                    key={content.content_id}
+                    content={content}
+                    index={index}
+                    handleFileSelectClick={handleFileSelectClick}
+                    handleDeleteContent={handleDeleteClick}
+                    updateFile={updateFile}
+                  />
+                ),
+              )}
             </div>
-          )}
-
-          <div className={`flex-1 flex justify-center items-center`}>
-            <LottieEmptySearch />
           </div>
-        </div>
-      ) : (
-        <div className={`flex-1 flex justify-center items-center`}>
-          <FileUploader folder_id={userLogin?.root_folder_id} />
-        </div>
-      )}
+        ) : !!folderContents?.folder_content?.length ? (
+          <div className={`flex-1 flex flex-col`}>
+            <div className={`flex-1 flex justify-center items-center`}>
+              <LottieEmptySearch />
+            </div>
+          </div>
+        ) : (
+          <div className={`flex-1 flex justify-center items-center`}>
+            <FileUploader folder_id={userLogin?.root_folder_id} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
