@@ -33,3 +33,13 @@ export enum CONTENT_UPLOADER_UPLOAD_STATUS {
   SUCCESS = 'Success',
   ERROR = 'Error',
 }
+
+export enum FILES_FILTER_KEYS {
+  ARCHIVE = 'Archive',
+  AUDIO = 'Audio',
+  CODE = 'Code',
+  DOCUMENT = 'Document',
+  IMAGE = 'Image',
+  VIDEO = 'Video',
+  OTHERS = 'Others',
+}

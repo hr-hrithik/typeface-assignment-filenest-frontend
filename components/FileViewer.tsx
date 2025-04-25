@@ -1,7 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import ListViewSVGIcon from '@/components/CustomSVGIcons/ListViewSVGIcon';
 import GridViewSVGIcon from '@/components/CustomSVGIcons/GridViewSVGIcon';
-import { FILE_VIEWER_VIEW_TYPES } from '@/utils/constants';
+import { FILE_VIEWER_VIEW_TYPES, FILES_FILTER_KEYS } from '@/utils/constants';
 import {
   UserFileDetails,
   UserFolderContentMetadata,
@@ -28,6 +34,8 @@ type Props = {
   currentPath: string[];
   folderContents: UserFolderContentsResponse;
   searchString: string;
+  selectedFilters: string[];
+  setSelectedFilters: Dispatch<SetStateAction<string[]>>;
 };
 
 function FileViewer({
@@ -35,6 +43,8 @@ function FileViewer({
   currentPath,
   folderContents,
   searchString,
+  selectedFilters,
+  setSelectedFilters,
 }: Props) {
   const timerRef = useRef<any>(0);
 
@@ -133,13 +143,16 @@ function FileViewer({
     const tempFilteredFolderContents: UserFolderContentMetadata[] =
       folderContents?.folder_content?.filter?.(content => {
         return (
-          content?.content_name
+          (content?.content_name
             ?.toLocaleLowerCase?.()
             ?.includes?.(searchString) ||
-          content?.content_file_type
-            ?.toLocaleLowerCase?.()
-            ?.includes?.(searchString) ||
-          content?.content_type?.toLocaleLowerCase?.()?.includes?.(searchString)
+            content?.content_file_type
+              ?.toLocaleLowerCase?.()
+              ?.includes?.(searchString) ||
+            content?.content_type
+              ?.toLocaleLowerCase?.()
+              ?.includes?.(searchString)) &&
+          selectedFilters?.includes?.(content?.content_file_type)
         );
       }) ?? [];
 
@@ -248,7 +261,7 @@ function FileViewer({
       },
       delay: searchString?.length ? 200 : 0,
     });
-  }, [searchString, folderContents?.folder_content]);
+  }, [searchString, folderContents?.folder_content, selectedFilters]);
 
   return (
     <div className={`flex-1 flex flex-col overflow-hidden gap-[16px]`}>
@@ -310,11 +323,13 @@ function FileViewer({
 
       {!!filteredFolderContents?.length ? (
         <div className={`flex-1 overflow-y-scroll transition-all duration-700`}>
-          {!!searchString && (
+          {(!!searchString ||
+            selectedFilters?.length !==
+              Object.keys(FILES_FILTER_KEYS)?.length) && (
             <div className={`mb-[8px]`}>
               <div>
                 <p className={`text-[18px] font-bold text-white`}>
-                  {`Search results (${filteredFolderContents?.length ?? 0})`}
+                  {`Filtered results (${filteredFolderContents?.length ?? 0})`}
                 </p>
               </div>
             </div>
@@ -351,11 +366,13 @@ function FileViewer({
         </div>
       ) : !!folderContents?.folder_content?.length ? (
         <div className={`flex-1 flex flex-col`}>
-          {!!searchString && (
+          {(!!searchString ||
+            selectedFilters?.length !==
+              Object.keys(FILES_FILTER_KEYS)?.length) && (
             <div className={`mb-[8px]`}>
               <div>
                 <p className={`text-[18px] font-bold text-white`}>
-                  {`Search results (${filteredFolderContents?.length ?? 0})`}
+                  {`Filtered results (${filteredFolderContents?.length ?? 0})`}
                 </p>
               </div>
             </div>

@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 type Props = {
   className?: string;
   handleOnClick: (
-    event?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => void;
   children?: ReactNode;
   buttonStyle?: 'primary' | 'secondary';

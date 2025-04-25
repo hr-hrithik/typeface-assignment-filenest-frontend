@@ -1,13 +1,19 @@
 import { UserFileDetails, UserFolderContentMetadata } from '@/models/UserFiles';
 import React, { useEffect, useState } from 'react';
 import Modal from '@/components/Modals/Modal';
-import { convertISOToDateString, handleAPIResponse } from '@/utils/Helper';
+import {
+  convertISOToDateString,
+  downloadFile,
+  handleAPIResponse,
+} from '@/utils/Helper';
 import CustomImage from '@/components/CustomImage';
 import Button from '@/components/Button';
 import DeleteSVGIcon from '@/components/CustomSVGIcons/DeleteSVGIcon';
 import { ApiController } from '@/ApiManager/ApiController';
 import { useConfigurationContext } from '@/context/ConfigurationContextProvider';
 import LottieLoading from '@/components/LottieFiles/LottieLoading';
+import { toast } from 'react-toastify';
+import { TOAST_MESSAGES } from '@/utils/ToastMessages';
 
 type Props = {
   content: UserFolderContentMetadata;
@@ -30,7 +36,14 @@ function FileDetailsModal({
     undefined,
   );
 
-  function handleDownloadFile() {}
+  function handleDownloadFile() {
+    try {
+      downloadFile(fileDetails?.file_public_url as string);
+      toast.success(TOAST_MESSAGES.fileGettingDownloaded, {
+        toastId: TOAST_MESSAGES.fileGettingDownloaded,
+      });
+    } catch (error) {}
+  }
 
   function handleDeleteFile() {
     handleClose && handleClose();

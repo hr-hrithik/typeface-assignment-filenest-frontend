@@ -128,3 +128,20 @@ export function uuid(length: number) {
   result = generate();
   return result;
 }
+
+export function downloadFile(filePublicUrl: string) {
+  if (typeof filePublicUrl !== 'string') {
+    toast.error(TOAST_MESSAGES.failedToDownloadFile, {
+      toastId: TOAST_MESSAGES.failedToDownloadFile,
+    });
+
+    return;
+  }
+
+  const fileName = filePublicUrl.split('/').pop() || 'download';
+
+  const link = document.createElement('a');
+  link.href = filePublicUrl;
+  link.download = fileName;
+  link.click();
+}

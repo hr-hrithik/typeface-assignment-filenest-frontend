@@ -2,12 +2,14 @@ import { ApiController } from '@/ApiManager/ApiController';
 import Button from '@/components/Button';
 import CloseSVGIcon from '@/components/CustomSVGIcons/CloseSVGIcon';
 import FilterSVGIcon from '@/components/CustomSVGIcons/FilterSVGIcon';
+import FilesFilter from '@/components/FilesFilter';
 import FileViewer from '@/components/FileViewer';
 import Input from '@/components/Input';
 import LottieLoading from '@/components/LottieFiles/LottieLoading';
 import UploadFileButton from '@/components/UploadFileButton';
 import { useConfigurationContext } from '@/context/ConfigurationContextProvider';
 import { UserFolderContentsResponse } from '@/models/UserFiles';
+import { FILES_FILTER_KEYS } from '@/utils/constants';
 import { handleAPIResponse } from '@/utils/Helper';
 import { PATHS } from '@/utils/Paths';
 import { useRouter } from 'next/router';
@@ -24,6 +26,9 @@ export default function Home() {
 
   const [currentPath, setCurrentPath] = useState<string[]>([]);
   const [searchString, setSearchString] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<string[]>(
+    Object.values(FILES_FILTER_KEYS),
+  );
 
   function handleSearchInputValueChange(value: string) {
     setSearchString(value);
@@ -77,7 +82,7 @@ export default function Home() {
   useEffect(() => {
     const { folder_id } = router?.query;
     if (!onAuthLoadPending) {
-      if (typeof folder_id === 'string' && userLogin?.user_uid) {
+      if (typeof folder_id === 'string' && folder_id && userLogin?.user_uid) {
         getFolderContents(folder_id);
       } else {
         if (userLogin?.root_folder_id) {
@@ -122,14 +127,10 @@ export default function Home() {
               />
             </div>
 
-            <Button className={`mt-[6px]`} handleOnClick={() => {}}>
-              <div className={`flex gap-[12px] items-center`}>
-                <div
-                  className={`w-[18px] h-[18px] flex justify-center items-center relative`}>
-                  <FilterSVGIcon className={``} />
-                </div>
-              </div>
-            </Button>
+            <FilesFilter
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
+            />
           </div>
 
           <div className={`flex-1 flex flex-col overflow-hidden`}>
@@ -140,6 +141,8 @@ export default function Home() {
                 folderContentsMapping?.[router?.query?.folder_id as string]
               }
               searchString={searchString}
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
             />
           </div>
         </div>
